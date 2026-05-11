@@ -27,7 +27,7 @@ from ftwpki.baselibs.core import (
     save_pem,
 )
 from ftwpki.baselibs.policies import UserPolicy
-from ftwpki.baselibs.request import CertificateRequest
+from ftwpki.baselibs.cert_request import CertificateRequest
 from ftwpki.baselibs.toml_utils import toml2dn
 
 

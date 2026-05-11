@@ -92,7 +92,7 @@ PasswordManager(private_dir='privat')
 
 .. SECTION - CSR Creation
 
->>> from ftwpki.baselibs.request import CertificateRequest
+>>> from ftwpki.baselibs.cert_request import CertificateRequest
 >>> from ftwpki.baselibs.policies import UserPolicy
 >>> from ftwpki.baselibs.core import (
 ...         create_distinguished_name,
