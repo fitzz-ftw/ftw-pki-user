@@ -16,7 +16,7 @@ tag_regex = '^(?P<prefix>v)?(?P<version>[^\+|-]+)(?P<suffix>-test)?$'
 write_to = "src/ftwpki/user/_version.py"
 
 [project]
-name = "ftw-user"
+name = "ftw-pki-user"
 dynamic = ["version"]
 description = ""
 readme = "README.md"
@@ -41,17 +41,17 @@ classifiers = [
     "Programming Language :: Python :: 3.15",
     "Topic :: Security",
 ]
-dependencies = ["platformdirs"]
+dependencies = ["platformdirs","ftw-pki-libs", "ftw-securify"]
 
 [project.urls]
-Homepage = "https://github.com/fitzz-ftw/ftw-user"
-Documentation = "https://ftw-user.readthedocs.io/"
-Repository = "https://github.com/fitzz-ftw/ftw-user.git"
-Issues = "https://github.com/fitzz-ftw/ftw-user/issues"
-Changelog = "https://github.com/fitzz-ftw/ftw-user/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/fitzz-ftw/ftw-pki-user"
+Documentation = "https://ftw-pki-user.readthedocs.io/"
+Repository = "https://github.com/fitzz-ftw/ftw-pki-user.git"
+Issues = "https://github.com/fitzz-ftw/ftw-pki-user/issues"
+Changelog = "https://github.com/fitzz-ftw/ftw-pki-user/blob/main/CHANGELOG.md"
 
 [project.scripts]
-ftwchangelog = "ftwpki.user.git_shortcuts.programms:prog_ftwchangelog"
+ftwpkiusercsr = "ftwpki.user.programms:prog_user_csr"
 
 [project.optional-dependencies]
 doc = [
@@ -66,9 +66,9 @@ doc = [
   "sphinxcontrib-mermaid",
 ]
 
-dev = ["ftw-user[test,doc,lint]", "esbonio==0.16.5"]
+dev = ["ftw-pki-user[test,doc,lint]", "esbonio==0.16.5"]
 lint = ["ruff"]
-test = ["pytest", "pytest-mock", "pytest-cov"]
+test = ["pytest", "pytest-mock", "pytest-cov", "ftw-devtools"]
 
 
 [tool.distutils.egg_info]

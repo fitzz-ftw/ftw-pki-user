@@ -12,23 +12,27 @@ from typing import Sequence, cast
 from docutils.nodes import Node
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.misc import Include
-from sphinx.util.osutil import adapt_path
 
 class IncludeIfExists(Include):
     """Include a file only if it exists on disk."""
+
     def run(self) -> Sequence[Node]:
-        path = directives.path(self.arguments[0])
-        if path.startswith('<') and path.endswith('>'):
-            path = '/' + path[1:-1]
-            root_prefix = self.standard_include_path
-        else:
-            root_prefix = self.state.document.settings.root_prefix
+        # 1. Get the path from the directive argument
+        raw_path = self.arguments[0]
         
-        path = adapt_path(path, cast(str, self.state.document.current_source), root_prefix)
+        # 2. Get the directory of the current source file (cite: 1)
+        current_source = Path(cast(str,self.state.document.current_source)).parent
         
-        if not Path(path).exists():
+        # 3. Resolve path: absolute or relative to the source file
+        path = Path(raw_path)
+        if not path.is_absolute():
+            path = current_source / path
+            
+        # 4. Check existence without Sphinx util (cite: 1)
+        if not path.exists():
             return []
 
+        # 5. If it exists, let the standard Include directive handle it
         return super().run()
 
 def setup(app):
