@@ -1,10 +1,16 @@
 # Configuration file for the Sphinx documentation builder.
-from collections.abc import Callable
+import importlib
 import os
 import sys
+from collections.abc import Callable
 from pathlib import Path
-CONF_DIR = Path(__file__).parent
-sys.path.insert(0, str((CONF_DIR / "ext").absolute()))
+from typing import Sequence, cast
+
+from docutils import nodes
+from docutils.nodes import Node
+from docutils.parsers.rst import directives
+from docutils.parsers.rst.directives.misc import Include, adapt_path
+from jinja2 import Environment, FileSystemLoader
 
 # Read the Docs liefert uns die Canonical URL direkt!
 html_baseurl = os.environ.get("READTHEDOCS_CANONICAL_URL", "")
@@ -15,7 +21,7 @@ if not html_baseurl:
 
 
 try:
-    from ftwpki.user._version import __version__ # type: ignore
+    from ftwpki.user._version import __version__  # type: ignore
     version = __version__ # pyright: ignore[reportUndefinedVariable]
     release = __version__ # pyright: ignore[reportUndefinedVariable]
 except ImportError:
@@ -24,18 +30,59 @@ except ImportError:
 
 #SECTION - Custom Includes
 #SECTION - Import Custom Includes
-from roles import  ftwpatchopt_role, ftwoption_role, person_role # pyright: ignore[reportMissingImports]
-from transforms import inject_option_anchors, InjectArgparseAnchors # pyright: ignore[reportMissingImports]
+def person_role(name, rawtext, text, lineno, inliner, options=None, content=None):
+    """
+    Custom role for person names styled as small caps.
+
+    :param name: The role name used in the document.
+    :type name: str
+    :param rawtext: The entire markup body.
+    :type rawtext: str
+    :param text: The argument of the role (the option name).
+    :type text: str
+    :param lineno: The line number where the role appears.
+    :type lineno: int
+    :param inliner: The inliner instance.
+    :type inliner: docutils.parsers.rst.states.Inliner
+    :param options: Directive options for customization.
+    :type options: dict
+    :param content: The directive content.
+    :type content: list
+    :return: A tuple containing a list of nodes and a list of system messages.
+    :rtype: tuple[list[reference], list[Any]]
+    """
+    node = nodes.inline(rawtext, text, classes=["person"])
+    return [node], []
+
+
+class IncludeIfExists(Include):
+    """
+    A smart include guard directive.
+    If the file exists, it is included with ALL provided options.
+    If it doesn't exist, the document remains clean without errors.
+    """
+
+    def run(self) -> Sequence[Node]:
+        path = directives.path(self.arguments[0])
+        if path.startswith("<") and path.endswith(">"):
+            path = "/" + path[1:-1]
+            root_prefix = self.standard_include_path
+        else:
+            root_prefix = self.state.document.settings.root_prefix
+        path = adapt_path(path, cast(str, self.state.document.current_source), root_prefix)
+        exists: bool = Path(path).exists()
+        if not exists:
+            return []
+
+        return super().run()
+
+
 #!SECTION - Import Custom Includes
 #SECTION - Register Custom Includes
 def setup(app):
     """Register custom components during the Sphinx setup process."""
-    app.add_role('ftwpatchopt', ftwpatchopt_role)
-    app.add_role("ftwoption", ftwoption_role)
     app.add_role("person", person_role)
-    app.connect("doctree-read", inject_option_anchors)
-    app.add_transform(InjectArgparseAnchors)
-    InjectArgparseAnchors.default_priority = 10
+    app.add_directive("include-if-exists", IncludeIfExists)
 #!SECTION - Register Custom Includes
 #!SECTION - Custom Includes
 
@@ -52,21 +99,17 @@ language = "en"
 extensions = [
     "sphinx.ext.autodoc",  # Zuerst die Basis
     "sphinx.ext.intersphinx",  # Wichtig für Cross-Refs
-    "sphinx.ext.autosummary",
     "myst_parser",  # Falls du Markdown nutzt
     "sphinxarg.ext",  # Das "tote Pferd" erst jetzt laden
-    "autoclasstoc",
-    "sphinxarg.ext",
     "sphinx.ext.coverage",
     "sphinx.ext.viewcode",
     "sphinx_copybutton",
     "sphinx_design",
     "sphinxcontrib.mermaid",
-    "include_if_exists",
 ]
 
 
-templates_path = ["_templates", "_templates/autosummary"]
+templates_path = ["_templates",]
 exclude_patterns = []
 maximum_signature_line_length= 120
 toc_object_entries_show_parents='hide'
@@ -118,12 +161,31 @@ toc_object_entries_show_parents = "hide"
 #SECTION - Options for Intersphinx
 intersphinx_mapping = {
     "python": (f"https://docs.python.org/{sys.version_info.major}.{sys.version_info.minor}", None),
-    "platformdirs": ("https://platformdirs.readthedocs.io/en/latest/", None),
+    "securify": ("https://ftw-securify.readthedocs.io/en/latest/", None),
 }
 #!SECTION - Options for Intersphinx
 
 #SECTION - Options for ePub output -------------------------------------------------
-from epub_cover import render_cover # pyright: ignore[reportMissingImports]
+
+def render_cover(
+    programname: str, version: str, covertemplate: str = "cover.svg"
+) -> tuple[str, str]:
+    templates_dir = "_templates"
+    static_dir = "_static"
+
+    if not os.path.exists(static_dir):
+        os.makedirs(static_dir)
+
+    env = Environment(loader=FileSystemLoader(templates_dir))
+    template = env.get_template(covertemplate)
+
+    # Rendern mit der echten 'release' Variable
+    output_path = os.path.join(static_dir, covertemplate)
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(template.render(version=version, programname=programname))
+    return (output_path, "epub-cover.html")
+
+
 if "epub" in sys.argv:
     epub_cover = render_cover("ftw-user", version.split("+")[0])
 
@@ -160,7 +222,7 @@ epub_exclude_files = [
 #!SECTION - Options for ePub output -------------------------------------------------
 
 #SECTION - Options for Mermaid -----------------------------------------------------
-mermaid_use_local = "_static/mermaid.min.js"
+# mermaid_use_local = "_static/mermaid.min.js"
 #!SECTION - Options for Mermaid -----------------------------------------------------
 
 
@@ -184,7 +246,46 @@ if sys.version_info < (3, 14):
 #!SECTION - Options for Autodoc
 
 #SECTION - Function for Autosummary
-from mermaid_decision import create_mermaid_decision_maker # pyright: ignore[reportMissingImports]
+
+def create_mermaid_decision_maker(
+    whitelist: list[str] | None = None, blacklist: list[str] | None = None
+) -> Callable[..., bool]:
+    whitelist = whitelist or []
+    blacklist = blacklist or []
+
+    def should_render_mermaid(fullname):
+        # 1. FAST RETURN: Blacklist (Geringste Kosten)
+        # Wenn wir es explizit verboten haben, sofort raus.
+        if fullname in blacklist:
+            return False
+
+        # 2. FAST RETURN: Whitelist (Geringe Kosten)
+        # Wenn wir wissen, dass es gewollt/möglich ist, sofort ok.
+        if fullname in whitelist:
+            return True
+
+        # 3. HEAVY LIFTING: Import & Analyse (Hohe Kosten)
+        # Erst wenn die Listen keine Antwort liefern, werfen wir die Import-Maschine an.
+        try:
+            # Trennung von Modul und Attribut
+            if "." not in fullname:
+                return False
+
+            module_name, class_name = fullname.rsplit(".", 1)
+            module = importlib.import_module(module_name)
+            obj = getattr(module, class_name)
+
+            if isinstance(obj, type):
+                # Technische Prüfung der Basisklassen
+                return any(b.__name__ != "object" for b in obj.__bases__)
+
+            return False
+        except (ImportError, AttributeError, ValueError):
+            return False
+
+    return should_render_mermaid
+
+
 #!SECTION - Function for Autosummary
 
 #SECTION - Options for Autosummary 
@@ -195,8 +296,6 @@ autosummary_ignore_module_all = True
 autosummary_context = {}
 
 inherit_diagramm: list[str] = [
-    "ftwpki.user.cli_parser",
-    "ftwpki.user.protocols",
 ]
 exclude_inherit_diagramm: list[str] = []
 
