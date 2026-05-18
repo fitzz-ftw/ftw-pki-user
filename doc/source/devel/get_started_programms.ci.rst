@@ -17,7 +17,8 @@ The Certificat Sign Request Creation
 
 >>> from pathlib import Path
 
->> test_paswd_path = env.copy2cwd("privat/testpasswd")
+>>> import getpass
+
 >>> conf_file = env.copy2cwd("csr_user_conf.toml")
 
 >>> def getpasswd(prompt:str)->str:
@@ -53,7 +54,8 @@ The Certificat Sign Request Creation
 >>> from argparse import Namespace
 
 >>> config:UserPKIConfig = UserPKIConfig()
->>> config.set_config("user")
+>>> config.set_config()
+
 
 >>> from typing import Any
 >>> file_conf:dict[str,Any]={"privatdir":config.private_keys.relative_to(config.config_path).as_posix(),}
@@ -88,18 +90,6 @@ Namespace(password=None,
 
 .. !SECTION - Configuration
 
-.. SECTION - Passwordhandling
-
-
->> from ftwpki.baselibs.passwd import PasswordManager
-
->
-
->> pwd_man = PasswordManager(private_dir=args.privatdir)
->> pwd_man
-PasswordManager(private_dir='privat')
-
-.. !SECTION - Passwordhandling
 
 .. SECTION - CSR Creation
 
@@ -150,6 +140,7 @@ CertificateRequest(subject=<Name(CN=IT-Security Server,OU=IT-Security,O=Fitzz Te
 >>> user_csr.verify_input_arguments(**san_args)
 
 .. !SECTION - CSR Creation
+
 .. SECTION - Password Input
 
 Simulating User Input
@@ -188,7 +179,8 @@ This stub acts as a "script" for our tests:
 ...     def reset(self):
 ...         self.generate = self._generate()
 
->>> stubgetpasswd = StubPassword()
+>>> getpass.getpass= StubPassword()
+
 >>> from securify.input.password import PasswordDoubleCheck
 
 .. note::
@@ -223,8 +215,7 @@ This stub acts as a "script" for our tests:
 
 
 >>> args.password = PasswordDoubleCheck(min_delay=1.5,
-...     require_terminal= False,
-...     pwcall=stubgetpasswd)()
+...     require_terminal= False)()
 Enter password: 
 Retype password: 
 
@@ -241,6 +232,7 @@ b'-----BEGIN ENCRYPTED PRIVATE KEY-...
 b'-----BEGIN PUBLIC KEY---...
 
 >>> args.private_key = args.private_key if args.private_key else str(Path(csr_file_name).with_suffix(".key.pem"))
+
 
 >>> args.public_key = args.public_key if args.public_key else str(Path(csr_file_name).with_suffix(config.ext_public))
 

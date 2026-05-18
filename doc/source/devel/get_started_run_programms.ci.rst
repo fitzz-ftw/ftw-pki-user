@@ -52,12 +52,14 @@ Running the programm Successfully and Errors
 
 >>> stubgetpasswd = StubPassword()
 
+>>> import getpass
+>>> getpass.getpass =stubgetpasswd
 
 .. !SECTION
 .. SECTION - Start programm function
 
 >>> from ftwpki.user.programms import prog_user_csr
->>> prog_user_csr(sys_argv, prog="ftwpkiserver", pwcall=stubgetpasswd)
+>>> prog_user_csr(sys_argv, prog="ftwpkiserver")
 Enter password: 
 Retype password: 
 0
@@ -68,7 +70,7 @@ Retype password:
 
 >>> sys_argv= shlex.split(cmd_line) 
 
->>> prog_user_csr(sys_argv, pwcall=stubgetpasswd) #doctest: +ELLIPSIS
+>>> prog_user_csr(sys_argv) #doctest: +ELLIPSIS
 Error in ...: At least an ip address or a hostname has to be given
 1
 
@@ -78,7 +80,7 @@ Error in ...: At least an ip address or a hostname has to be given
 >>> sys_argv= shlex.split(cmd_line)
 
 >>> stubgetpasswd.reset()
->>> prog_user_csr(sys_argv, pwcall=stubgetpasswd) #doctest: +ELLIPSIS
+>>> prog_user_csr(sys_argv) #doctest: +ELLIPSIS
 Error in ...: the following arguments are required: email
 1
 
@@ -89,7 +91,7 @@ Error in ...: the following arguments are required: email
 >>> cmd_line += " www-admin@example.org"
 
 >>> sys_argv= shlex.split(cmd_line)
->>> prog_user_csr(sys_argv, pwcall=stubgetpasswd) #doctest: +ELLIPSIS
+>>> prog_user_csr(sys_argv) #doctest: +ELLIPSIS
 Error in ...: Hostname 'org' is not a FQDN (missing dot).
 1
 
@@ -100,7 +102,7 @@ Error in ...: Hostname 'org' is not a FQDN (missing dot).
 
 >>> sys_argv= shlex.split(cmd_line)
 >>> stubgetpasswd.reset()
->>> prog_user_csr(sys_argv, pwcall=stubgetpasswd)
+>>> prog_user_csr(sys_argv)
 Enter password: 
 Retype password: 
 0
@@ -113,7 +115,7 @@ Retype password:
 
 >>> sys_argv= shlex.split(cmd_line)
 >>> stubgetpasswd.reset()
->>> prog_user_csr(sys_argv, pwcall=stubgetpasswd)
+>>> prog_user_csr(sys_argv)
 Enter password: 
 Retype password: 
 0
@@ -125,7 +127,7 @@ Retype password:
 
 >>> sys_argv= shlex.split(cmd_line)
 >>> stubgetpasswd.reset()
->>> prog_user_csr(sys_argv, pwcall=stubgetpasswd) #doctest: +ELLIPSIS
+>>> prog_user_csr(sys_argv) #doctest: +ELLIPSIS
 Error in ...: 'org' does not appear to be an IPv4 or IPv6 address
 1
 
@@ -135,7 +137,7 @@ Error in ...: 'org' does not appear to be an IPv4 or IPv6 address
 
 >>> sys_argv= shlex.split(cmd_line)
 >>> stubgetpasswd.reset()
->>> prog_user_csr(sys_argv, pwcall=stubgetpasswd) #doctest: +ELLIPSIS
+>>> prog_user_csr(sys_argv) #doctest: +ELLIPSIS
 Error in ...: Attribute's length must be >= 2 and <= 2, but it was 0
 1
 
@@ -147,7 +149,7 @@ Error in ...: Attribute's length must be >= 2 and <= 2, but it was 0
 
 >>> sys_argv= shlex.split(cmd_line)
 >>> stubgetpasswd.reset()
->>> prog_user_csr(sys_argv, pwcall=stubgetpasswd)
+>>> prog_user_csr(sys_argv)
 Enter password: 
 Retype password: 
 0
