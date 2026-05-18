@@ -41,7 +41,7 @@ classifiers = [
     "Programming Language :: Python :: 3.15",
     "Topic :: Security",
 ]
-dependencies = ["platformdirs","ftw-pki-libs", "ftw-securify"]
+dependencies = ["ftw-pki-libs", "ftw-securify"]
 
 [project.urls]
 Homepage = "https://github.com/fitzz-ftw/ftw-pki-user"

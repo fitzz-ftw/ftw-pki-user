@@ -18,6 +18,7 @@ from pathlib import Path
 from cryptography import x509
 from securify.input.password import PasswordDoubleCheck
 
+from ftwpki.baselibs.cert_request import CertificateRequest
 from ftwpki.baselibs.cli_parser import ServerClientCSRParser, ServerClientCSRProtocol
 from ftwpki.baselibs.core import (
     create_csr_name,
@@ -27,7 +28,6 @@ from ftwpki.baselibs.core import (
     save_pem,
 )
 from ftwpki.baselibs.policies import UserPolicy
-from ftwpki.baselibs.cert_request import CertificateRequest
 from ftwpki.baselibs.toml_utils import toml2dn
 
 
@@ -128,6 +128,7 @@ if __name__ == "__main__": # pragma: no cover
     test_files = [
         "get_started_programms.ci.rst",
         "get_started_run_programms.ci.rst",
+        "get_started_programms_old.ci.rst",
     ]
     for file in test_files:
         test_file = testfiles_dir / file

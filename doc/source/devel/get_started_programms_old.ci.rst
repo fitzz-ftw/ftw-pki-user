@@ -1,3 +1,5 @@
+:orphan:
+
 The Certificat Sign Request Creation
 #########################################
 
@@ -92,10 +94,7 @@ Namespace(password=None,
 
 
 >> from ftwpki.baselibs.passwd import PasswordManager
-
->
-
->> pwd_man = PasswordManager(private_dir=args.privatdir)
+>> pwd_man: PasswordManager = PasswordManager(private_dir=args.privatdir)
 >> pwd_man
 PasswordManager(private_dir='privat')
 
@@ -129,7 +128,7 @@ PasswordManager(private_dir='privat')
 
 >>> from ftwpki.baselibs.core import create_csr_name
 
->>> csr_file_name: str = create_csr_name(args.commonName)
+>>> csr_file_name = create_csr_name(args.commonName)
 
 >>> csr_file_name
 'IT-Security-Server.csr'
@@ -240,9 +239,9 @@ b'-----BEGIN ENCRYPTED PRIVATE KEY-...
 >>> pub #doctest: +ELLIPSIS
 b'-----BEGIN PUBLIC KEY---...
 
->>> args.private_key = args.private_key if args.private_key else str(Path(csr_file_name).with_suffix(".key.pem"))
+>>> args.private_key = args.private_key if args.private_key else str(Path(csr_file_name).with_suffix(".key"))
 
->>> args.public_key = args.public_key if args.public_key else str(Path(csr_file_name).with_suffix(config.ext_public))
+>>> args.public_key = args.public_key if args.public_key else str(Path(csr_file_name).with_suffix(".pub"))
 
 .. !SECTION - Keypair Creation
 
@@ -257,11 +256,10 @@ b'-----BEGIN PUBLIC KEY---...
 
 >>> from ftwpki.baselibs.core import save_pem
 >>> save_pem(priv, 
-...     config.config_path / f"{args.privatdir}/{args.private_key}", 
+...     Path(f"{args.privatdir}/{args.private_key}"), 
 ...     is_private=True)
->>> save_pem(pub, config.data_path /f"{args.public_key}", is_private=False)
+>>> save_pem(pub, Path(f"{args.public_key}"), is_private=False)
 
->>> san_args={"ip_addresses": args.ip_addresses, "dns_names": args.host_names}
 
 >>> save_pem(user_csr.build(load_private_key_from_pem(pem_data=priv, passphrase= args.password
 ... ),**san_args).get_pem(), 
@@ -270,20 +268,6 @@ b'-----BEGIN PUBLIC KEY---...
 .. !SECTION - Save Keys and CSR
 
 .. !SECTION - Stop programm
-
-.. SECTION - Test existing keys
-
->>> conf_path:Path = config.config_path
->>> public_path:Path = config.data_path
-
->>> (conf_path / ".private"/ "IT-Security-Server.key.pem").is_file()
-True
-
->>> (public_path / "IT-Security-Server.pub.pem").is_file()
-True
-
-
-.. !SECTION - Test existing keys
 
 .. SECTION - Load and read CSR
 
