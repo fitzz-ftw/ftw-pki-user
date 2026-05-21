@@ -25,14 +25,14 @@ The Certificat Sign Request Creation
 ...     print(prompt)
 ...     return "strenggeheim"
 
->>> cmd_line="--conf_file csr_user_conf.toml  "
+>>> cmd_line="--conf-file csr_user_conf.toml  "
 >>> cmd_line += " -hn www.secure.example.org"
 >>> cmd_line += " www-admin@example.org"
 
 >>> import shlex
 >>> sys_argv= shlex.split(cmd_line) 
 >>> sys_argv #doctest: +NORMALIZE_WHITESPACE
-['--conf_file', 
+['--conf-file', 
     'csr_user_conf.toml', 
     '-hn', 'www.secure.example.org',
     'www-admin@example.org']
@@ -82,11 +82,13 @@ Namespace(password=None,
         'localityName': 'Somewherecity', 
         'organizationalUnitName': 'IT-Security'}, 
     conf_file=...Path('csr_user_conf.toml'), 
-    private_key='', public_key='', 
+    key_name='',  
     privatdir='.private', 
     email='www-admin@example.org', 
     ip_addresses=[], 
-    host_names=['www.secure.example.org'])
+    host_names=['www.secure.example.org'], 
+    private_key='', 
+    public_key='')
 
 .. !SECTION - Configuration
 
