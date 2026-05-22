@@ -28,7 +28,7 @@ from ftwpki.baselibs.core import (
     save_pem,
 )
 from ftwpki.baselibs.policies import UserPolicy
-from ftwpki.baselibs.toml_utils import toml2dn
+from ftwpki.baselibs.toml_utils import toml2_dn
 
 
 def prog_user_csr(argv: list[str] | None = None,**kwargs) -> int:
@@ -52,7 +52,7 @@ def prog_user_csr(argv: list[str] | None = None,**kwargs) -> int:
         default_namespace: Namespace = Namespace()
         default_namespace.password = None
         ca_parser: ServerClientCSRParser = ServerClientCSRParser(**kwargs)
-        ca_parser.set_defaults(**toml2dn(argv))
+        ca_parser.set_defaults(**toml2_dn(argv))
         ca_parser.set_defaults(**file_conf)
         args: ServerClientCSRProtocol = ca_parser.parse_args(argv, default_namespace)
 
