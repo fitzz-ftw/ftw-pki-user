@@ -18,7 +18,7 @@ from cryptography import x509
 from securify.input.password import PasswordDoubleCheck
 
 from ftwpki.baselibs.cert_request import CertificateRequest
-from ftwpki.baselibs.cli_parser import ServerClientCSRParser, ServerClientCSRProtocol
+from ftwpki.baselibs.cli_parser import ServerClientCSRParser, ServerClientCSRProtocol, TomlPreParser
 from ftwpki.baselibs.configuration import Any, UserPKIConfig
 from ftwpki.baselibs.core import (
     create_csr_name,
@@ -28,7 +28,7 @@ from ftwpki.baselibs.core import (
     save_pem,
 )
 from ftwpki.baselibs.policies import UserPolicy
-from ftwpki.baselibs.toml_utils import toml2_dn
+from ftwpki.baselibs.toml_utils import toml2_dn, toml2dn
 
 
 def prog_user_csr(argv: list[str] | None = None,**kwargs) -> int:
@@ -44,6 +44,8 @@ def prog_user_csr(argv: list[str] | None = None,**kwargs) -> int:
     """
     try:
         # SECTION - Configuration
+        pre_parser = TomlPreParser()
+        pre_args, _ = pre_parser.parse_known_args(argv)
         config: UserPKIConfig = UserPKIConfig()
         config.set_config()
         file_conf: dict[str, Any] = {
@@ -52,7 +54,8 @@ def prog_user_csr(argv: list[str] | None = None,**kwargs) -> int:
         default_namespace: Namespace = Namespace()
         default_namespace.password = None
         ca_parser: ServerClientCSRParser = ServerClientCSRParser(**kwargs)
-        ca_parser.set_defaults(**toml2_dn(argv))
+        ca_parser.set_defaults(**toml2dn(pre_args.conf_file)) if pre_args.conf_file else ...
+        # ca_parser.set_defaults(**toml2_dn(argv))
         ca_parser.set_defaults(**file_conf)
         args: ServerClientCSRProtocol = ca_parser.parse_args(argv, default_namespace)
 
