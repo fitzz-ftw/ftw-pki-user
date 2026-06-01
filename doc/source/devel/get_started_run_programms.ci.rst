@@ -22,7 +22,7 @@ Running the programm Successfully and Errors
 >>> conf_file = env.copy2cwd("csr_user_conf.toml")
 
 >>> cmd_line="--conf-file csr_user_conf.toml  "
->>> cmd_line += " --private-dir privat"
+>>> cmd_line += " -k tim"
 >>> cmd_line += " -hn www.secure.example.org"
 >>> cmd_line += " www-admin@example.org"
 
@@ -31,7 +31,7 @@ Running the programm Successfully and Errors
 >>> sys_argv #doctest: +NORMALIZE_WHITESPACE
 ['--conf-file', 
     'csr_user_conf.toml', 
-    '--private-dir', 'privat', 
+    '-k', 'tim', 
     '-hn', 'www.secure.example.org',
     'www-admin@example.org']
 
@@ -50,6 +50,11 @@ Running the programm Successfully and Errors
 ...     def reset(self):
 ...         self.generate = self._generate()
 
+
+>>> def stub_keyboard_interrupt(prompt):
+...     print(prompt)
+...     raise KeyboardInterrupt
+
 >>> stubgetpasswd = StubPassword()
 
 >>> import getpass
@@ -64,8 +69,9 @@ Enter password:
 Retype password: 
 0
 
+>>> conf_file = env.copy2cwd("csr_user_conf.toml")
 >>> cmd_line="--conf-file csr_user_conf.toml  "
->>> cmd_line += " --private-dir privat"
+>>> cmd_line += " -k tim"
 >>> cmd_line += " www-admin@example.org"
 
 >>> sys_argv= shlex.split(cmd_line) 
@@ -74,8 +80,9 @@ Retype password:
 Error in ...: At least an ip address or a hostname has to be given
 1
 
+>>> conf_file = env.copy2cwd("csr_user_conf.toml")
 >>> cmd_line="--conf-file csr_user_conf.toml  "
->>> cmd_line += " --private-dir privat"
+>>> cmd_line += " -k tim"
 >>> cmd_line += " -hn www.secure.example.org"
 >>> sys_argv= shlex.split(cmd_line)
 
@@ -85,8 +92,9 @@ Error in ...: the following arguments are required: email
 1
 
 
+>>> conf_file = env.copy2cwd("csr_user_conf.toml")
 >>> cmd_line="--conf-file csr_user_conf.toml  "
->>> cmd_line += " --private-dir privat"
+>>> cmd_line += " -k tim"
 >>> cmd_line += " -hn org"
 >>> cmd_line += " www-admin@example.org"
 
@@ -95,8 +103,9 @@ Error in ...: the following arguments are required: email
 Error in ...: Hostname 'org' is not a FQDN (missing dot).
 1
 
+>>> conf_file = env.copy2cwd("csr_user_conf.toml")
 >>> cmd_line="--conf-file csr_user_conf.toml  "
->>> cmd_line += " --private-dir privat"
+>>> cmd_line += " -k tim"
 >>> cmd_line += " -hn localhost"
 >>> cmd_line += " www-admin@example.org"
 
@@ -107,8 +116,9 @@ Enter password:
 Retype password: 
 0
 
+>>> conf_file = env.copy2cwd("csr_user_conf.toml")
 >>> cmd_line="--conf-file csr_user_conf.toml  "
->>> cmd_line += " --private-dir privat"
+>>> cmd_line += " -k tim"
 >>> cmd_line += " -hn localhost"
 >>> cmd_line += " -ip 127.0.0.1"
 >>> cmd_line += " www-admin@example.org"
@@ -120,8 +130,9 @@ Enter password:
 Retype password: 
 0
 
+>>> conf_file = env.copy2cwd("csr_user_conf.toml")
 >>> cmd_line="--conf-file csr_user_conf.toml  "
->>> cmd_line += " --private-dir privat"
+>>> cmd_line += " -k tim"
 >>> cmd_line += " -ip org"
 >>> cmd_line += " www-admin@example.org"
 
@@ -131,19 +142,31 @@ Retype password:
 Error in ...: 'org' does not appear to be an IPv4 or IPv6 address
 1
 
->>> cmd_line = " --private-dir privat"
+
+
+>>> conf_file = env.copy2cwd("csr_user_conf.toml")
+>>> cmd_line="--conf-file csr_user_conf.toml  "
+>>> cmd_line += " -k tim"
+>>> cmd_line += " -C U "
 >>> cmd_line += " -ip 192.168.1.1"
 >>> cmd_line += " www-admin@example.org"
 
 >>> sys_argv= shlex.split(cmd_line)
 >>> stubgetpasswd.reset()
 >>> prog_user_csr(sys_argv) #doctest: +ELLIPSIS
-Error in ...: Attribute's length must be >= 2 and <= 2, but it was 0
+Error in ...: Attribute's length must be >= 2 and <= 2, but it was 1
 1
 
->>> cmd_line = " -C DE"
+.. TODO: Bessere, aussagekräftigere Fehlermeldung.
+    die Ursache ist die länge des Countrycodes, er muss 2 Zeichen lang sein
+    Ursprung der Exceptoiion ist cryptography.
+
+
+>>> conf_file = env.copy2cwd("csr_user_conf.toml")
+>>> cmd_line="--conf-file csr_user_conf.toml  "
+>>> cmd_line += " -C DE"
 >>> cmd_line += " -CN 'IT-Security Server'"
->>> cmd_line += " --private-dir privat"
+>>> cmd_line += " -k tim"
 >>> cmd_line += " -ip 192.168.1.1"
 >>> cmd_line += " www-admin@example.org"
 
@@ -153,6 +176,22 @@ Error in ...: Attribute's length must be >= 2 and <= 2, but it was 0
 Enter password: 
 Retype password: 
 0
+
+>>> conf_file = env.copy2cwd("csr_user_conf.toml")
+>>> cmd_line="--conf-file csr_user_conf.toml  "
+>>> cmd_line += " -C DE"
+>>> cmd_line += " -CN 'IT-Security Server'"
+>>> cmd_line += " -k tim"
+>>> cmd_line += " -ip 192.168.1.1"
+>>> cmd_line += " www-admin@example.org"
+
+>>> sys_argv= shlex.split(cmd_line)
+>>> getpass.getpass = stub_keyboard_interrupt
+>>> prog_user_csr(sys_argv)
+Enter password: 
+2
+
+
 
 .. !SECTION - Start programm function
 
