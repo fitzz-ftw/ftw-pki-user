@@ -28,7 +28,7 @@ The Certificat Sign Request Creation
 
 >>> cmd_line="--conf-file csr_user_conf.toml  "
 >>> cmd_line += " -k tim"
->>> cmd_line += " -hn www.secure.example.org"
+>>> cmd_line += " -dns www.secure.example.org"
 >>> cmd_line += " www-admin@example.org"
 
 >>> import shlex
@@ -37,7 +37,7 @@ The Certificat Sign Request Creation
 ['--conf-file', 
     'csr_user_conf.toml',
      '-k', 'tim',
-    '-hn', 'www.secure.example.org',
+    '-dns', 'www.secure.example.org',
     'www-admin@example.org']
 
 

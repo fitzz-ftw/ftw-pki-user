@@ -23,7 +23,7 @@ Running the programm Successfully and Errors
 
 >>> cmd_line="--conf-file csr_user_conf.toml  "
 >>> cmd_line += " -k tim"
->>> cmd_line += " -hn www.secure.example.org"
+>>> cmd_line += " -dns www.secure.example.org"
 >>> cmd_line += " www-admin@example.org"
 
 >>> import shlex
@@ -32,7 +32,7 @@ Running the programm Successfully and Errors
 ['--conf-file', 
     'csr_user_conf.toml', 
     '-k', 'tim', 
-    '-hn', 'www.secure.example.org',
+    '-dns', 'www.secure.example.org',
     'www-admin@example.org']
 
 >>> import time
@@ -76,14 +76,19 @@ Retype password:
 
 >>> sys_argv= shlex.split(cmd_line) 
 
+
+>>> stubgetpasswd.reset()
+
 >>> prog_user_csr(sys_argv) #doctest: +ELLIPSIS
-Error in ...: At least an ip address or a hostname has to be given
-1
+Enter password: 
+Retype password: 
+0
+
 
 >>> conf_file = env.copy2cwd("csr_user_conf.toml")
 >>> cmd_line="--conf-file csr_user_conf.toml  "
 >>> cmd_line += " -k tim"
->>> cmd_line += " -hn www.secure.example.org"
+>>> cmd_line += " -dns www.secure.example.org"
 >>> sys_argv= shlex.split(cmd_line)
 
 >>> stubgetpasswd.reset()
@@ -95,7 +100,7 @@ Error in ...: the following arguments are required: email
 >>> conf_file = env.copy2cwd("csr_user_conf.toml")
 >>> cmd_line="--conf-file csr_user_conf.toml  "
 >>> cmd_line += " -k tim"
->>> cmd_line += " -hn org"
+>>> cmd_line += " -dns org"
 >>> cmd_line += " www-admin@example.org"
 
 >>> sys_argv= shlex.split(cmd_line)
@@ -106,7 +111,7 @@ Error in ...: Hostname 'org' is not a FQDN (missing dot).
 >>> conf_file = env.copy2cwd("csr_user_conf.toml")
 >>> cmd_line="--conf-file csr_user_conf.toml  "
 >>> cmd_line += " -k tim"
->>> cmd_line += " -hn localhost"
+>>> cmd_line += " -dns localhost"
 >>> cmd_line += " www-admin@example.org"
 
 >>> sys_argv= shlex.split(cmd_line)
@@ -119,7 +124,7 @@ Retype password:
 >>> conf_file = env.copy2cwd("csr_user_conf.toml")
 >>> cmd_line="--conf-file csr_user_conf.toml  "
 >>> cmd_line += " -k tim"
->>> cmd_line += " -hn localhost"
+>>> cmd_line += " -dns localhost"
 >>> cmd_line += " -ip 127.0.0.1"
 >>> cmd_line += " www-admin@example.org"
 

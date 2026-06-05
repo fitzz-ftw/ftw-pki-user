@@ -12,6 +12,7 @@ Modul programms documentation
 
 import getpass  # noqa: F401
 import sys
+import traceback
 from pathlib import Path
 
 from ftwpki.baselibs.workflows import CSRWorkflow
@@ -30,6 +31,7 @@ def prog_user_csr(argv: list[str] | None = None,**kwargs) -> int:
     """
     try:
         csr_creator = CSRWorkflow()
+        csr_creator.mandantory_san=False
         # SECTION - Configuration
         csr_creator.configuration(argv)
         # !SECTION - Configuration
@@ -60,6 +62,7 @@ def prog_user_csr(argv: list[str] | None = None,**kwargs) -> int:
     except KeyboardInterrupt:
         return 2
     except Exception as e:
+        traceback.print_exc()
         print(f"Error in {sys.argv[0]}: {e}")
         return 1
 
