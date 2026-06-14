@@ -19,14 +19,16 @@ The Certificat Sign Request Creation
 >>> from pathlib import Path
 
 >>> import getpass
+>>> test_data_dir = "data-user"
+>>> config_file = "M-V-HH-MaxMustermann.toml"
 
->>> conf_file = env.copy2cwd("csr_user_conf.toml")
+>>> conf_file = env.copy2cwd(f"{test_data_dir}/{config_file}", config_file)
 
 >>> def getpasswd(prompt:str)->str:
 ...     print(prompt)
 ...     return "strenggeheim"
 
->>> cmd_line="--conf-file csr_user_conf.toml  "
+>>> cmd_line=f"--conf-file {config_file}  "
 >>> cmd_line += " -k tim"
 >>> cmd_line += " -dns www.secure.example.org"
 >>> cmd_line += " www-admin@example.org"
@@ -35,7 +37,7 @@ The Certificat Sign Request Creation
 >>> sys_argv= shlex.split(cmd_line) 
 >>> sys_argv #doctest: +NORMALIZE_WHITESPACE
 ['--conf-file', 
-    'csr_user_conf.toml',
+    'M-V-HH-MaxMustermann.toml',
      '-k', 'tim',
     '-dns', 'www.secure.example.org',
     'www-admin@example.org']
@@ -181,7 +183,7 @@ Retype password:
 >>> (conf_path / ".private"/ "tim.key.pem").is_file()
 True
 
->>> (public_path / "csr_user_conf.pki").is_file()
+>>> (public_path / "M-V-HH-MaxMustermann.pki").is_file()
 True
 
 
@@ -191,7 +193,7 @@ True
 
 >>> from ftwpki.baselibs.core import load_csr_from_pem
 
->>> csr_obj = load_csr_from_pem(Path("csr_user_conf.csr").read_bytes()) 
+>>> csr_obj = load_csr_from_pem(Path("M-V-HH-MaxMustermann.csr").read_bytes()) 
 
 >>> csr_obj #doctest: +ELLIPSIS
 <cryptography.hazmat.bindings._rust.x509.CertificateSigningRequest object at ...>
@@ -201,10 +203,10 @@ True
 >>> get_subject_dict(csr_obj) #doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
 {'countryName': 'DE', 
  'stateOrProvinceName': '', 
- 'localityName': 'Somewherecity', 
- 'organizationName': 'Fitzz TeXnik Welt', 
- 'organizationalUnitName': 'IT-Security', 
- 'commonName': 'IT-Security Server'}
+ 'localityName': 'Hamburg', 
+ 'organizationName': 'Muster-Verband e.V.', 
+ 'organizationalUnitName': 'Mitgliederverwaltung', 
+ 'commonName': 'Max Mustermann'}
 
 .. !SECTION - Load and read CSR
 

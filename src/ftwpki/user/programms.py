@@ -62,7 +62,7 @@ def prog_user_csr(argv: list[str] | None = None,**kwargs) -> int:
     except KeyboardInterrupt:
         return 2
     except Exception as e:
-        traceback.print_exc()
+        # traceback.print_exc()
         print(f"Error in {sys.argv[0]}: {e}")
         return 1
 
@@ -80,7 +80,7 @@ if __name__ == "__main__": # pragma: no cover
     # Pfad zu den dokumentierenden Tests
     testfiles_dir = Path(__file__).parents[3] / "doc/source/devel"
     test_files = [
-        # "get_started_programms.ci.rst",
+        "get_started_programms.ci.rst",
         "get_started_run_programms.ci.rst",
     ]
     for file in test_files:

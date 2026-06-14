@@ -15,13 +15,14 @@ Running the programm Successfully and Errors
 >>> private_dir:Path = Path("privat")
 >>> private_dir.mkdir(parents=True, exist_ok=True)
 
+>>> test_data_dir = "data-user"
+>>> config_file = "M-V-HH-MaxMustermann.toml"
 
 
 
->> test_paswd_path = env.copy2cwd("privat/testpasswd")
->>> conf_file = env.copy2cwd("csr_user_conf.toml")
+>>> conf_file = env.copy2cwd(f"{test_data_dir}/{config_file}","M-V-HH-MaxMustermann.toml")
 
->>> cmd_line="--conf-file csr_user_conf.toml  "
+>>> cmd_line="--conf-file M-V-HH-MaxMustermann.toml  "
 >>> cmd_line += " -k tim"
 >>> cmd_line += " -dns www.secure.example.org"
 >>> cmd_line += " www-admin@example.org"
@@ -30,7 +31,7 @@ Running the programm Successfully and Errors
 >>> sys_argv= shlex.split(cmd_line) 
 >>> sys_argv #doctest: +NORMALIZE_WHITESPACE
 ['--conf-file', 
-    'csr_user_conf.toml', 
+    'M-V-HH-MaxMustermann.toml', 
     '-k', 'tim', 
     '-dns', 'www.secure.example.org',
     'www-admin@example.org']
@@ -69,8 +70,8 @@ Enter password:
 Retype password: 
 0
 
->>> conf_file = env.copy2cwd("csr_user_conf.toml")
->>> cmd_line="--conf-file csr_user_conf.toml  "
+>>> conf_file = env.copy2cwd(f"{test_data_dir}/{config_file}","M-V-HH-MaxMustermann.toml")
+>>> cmd_line="--conf-file M-V-HH-MaxMustermann.toml  "
 >>> cmd_line += " -k tim"
 >>> cmd_line += " www-admin@example.org"
 
@@ -85,8 +86,8 @@ Retype password:
 0
 
 
->>> conf_file = env.copy2cwd("csr_user_conf.toml")
->>> cmd_line="--conf-file csr_user_conf.toml  "
+>>> conf_file = env.copy2cwd(f"{test_data_dir}/{config_file}","M-V-HH-MaxMustermann.toml")
+>>> cmd_line="--conf-file M-V-HH-MaxMustermann.toml  "
 >>> cmd_line += " -k tim"
 >>> cmd_line += " -dns www.secure.example.org"
 >>> sys_argv= shlex.split(cmd_line)
@@ -97,8 +98,8 @@ Error in ...: the following arguments are required: email
 1
 
 
->>> conf_file = env.copy2cwd("csr_user_conf.toml")
->>> cmd_line="--conf-file csr_user_conf.toml  "
+>>> conf_file = env.copy2cwd(f"{test_data_dir}/{config_file}","M-V-HH-MaxMustermann.toml")
+>>> cmd_line="--conf-file M-V-HH-MaxMustermann.toml  "
 >>> cmd_line += " -k tim"
 >>> cmd_line += " -dns org"
 >>> cmd_line += " www-admin@example.org"
@@ -108,8 +109,8 @@ Error in ...: the following arguments are required: email
 Error in ...: Hostname 'org' is not a FQDN (missing dot).
 1
 
->>> conf_file = env.copy2cwd("csr_user_conf.toml")
->>> cmd_line="--conf-file csr_user_conf.toml  "
+>>> conf_file = env.copy2cwd(f"{test_data_dir}/{config_file}","M-V-HH-MaxMustermann.toml")
+>>> cmd_line="--conf-file M-V-HH-MaxMustermann.toml  "
 >>> cmd_line += " -k tim"
 >>> cmd_line += " -dns localhost"
 >>> cmd_line += " www-admin@example.org"
@@ -121,8 +122,8 @@ Enter password:
 Retype password: 
 0
 
->>> conf_file = env.copy2cwd("csr_user_conf.toml")
->>> cmd_line="--conf-file csr_user_conf.toml  "
+>>> conf_file = env.copy2cwd(f"{test_data_dir}/{config_file}","M-V-HH-MaxMustermann.toml")
+>>> cmd_line="--conf-file M-V-HH-MaxMustermann.toml  "
 >>> cmd_line += " -k tim"
 >>> cmd_line += " -dns localhost"
 >>> cmd_line += " -ip 127.0.0.1"
@@ -135,8 +136,8 @@ Enter password:
 Retype password: 
 0
 
->>> conf_file = env.copy2cwd("csr_user_conf.toml")
->>> cmd_line="--conf-file csr_user_conf.toml  "
+>>> conf_file = env.copy2cwd(f"{test_data_dir}/{config_file}","M-V-HH-MaxMustermann.toml")
+>>> cmd_line="--conf-file M-V-HH-MaxMustermann.toml  "
 >>> cmd_line += " -k tim"
 >>> cmd_line += " -ip org"
 >>> cmd_line += " www-admin@example.org"
@@ -149,8 +150,8 @@ Error in ...: 'org' does not appear to be an IPv4 or IPv6 address
 
 
 
->>> conf_file = env.copy2cwd("csr_user_conf.toml")
->>> cmd_line="--conf-file csr_user_conf.toml  "
+>>> conf_file = env.copy2cwd(f"{test_data_dir}/{config_file}","M-V-HH-MaxMustermann.toml")
+>>> cmd_line="--conf-file M-V-HH-MaxMustermann.toml  "
 >>> cmd_line += " -k tim"
 >>> cmd_line += " -C U "
 >>> cmd_line += " -ip 192.168.1.1"
@@ -167,8 +168,8 @@ Error in ...: Attribute's length must be >= 2 and <= 2, but it was 1
     Ursprung der Exceptoiion ist cryptography.
 
 
->>> conf_file = env.copy2cwd("csr_user_conf.toml")
->>> cmd_line="--conf-file csr_user_conf.toml  "
+>>> conf_file = env.copy2cwd(f"{test_data_dir}/{config_file}","M-V-HH-MaxMustermann.toml")
+>>> cmd_line="--conf-file M-V-HH-MaxMustermann.toml  "
 >>> cmd_line += " -C DE"
 >>> cmd_line += " -CN 'IT-Security Server'"
 >>> cmd_line += " -k tim"
@@ -182,8 +183,8 @@ Enter password:
 Retype password: 
 0
 
->>> conf_file = env.copy2cwd("csr_user_conf.toml")
->>> cmd_line="--conf-file csr_user_conf.toml  "
+>>> conf_file = env.copy2cwd(f"{test_data_dir}/{config_file}","M-V-HH-MaxMustermann.toml")
+>>> cmd_line="--conf-file M-V-HH-MaxMustermann.toml  "
 >>> cmd_line += " -C DE"
 >>> cmd_line += " -CN 'IT-Security Server'"
 >>> cmd_line += " -k tim"
