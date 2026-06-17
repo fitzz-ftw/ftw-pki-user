@@ -66,11 +66,12 @@ The Certificat Sign Request Creation
 .. !SECTION - CSR Creation
 
 .. SECTION - Password Input
+   :external+securify
 
 Simulating User Input
 ----------------------
 
-The :external+securify:class:`~securify.input.password.PasswordDoubleCheck` class is designed for 
+The :class:`~securify.input.password.PasswordDoubleCheck` class is designed for 
 interactive use. 
 To demonstrate its behavior in a non-interactive environment like this 
 documentation, we use a helper class called :class:`StubPassword`.
