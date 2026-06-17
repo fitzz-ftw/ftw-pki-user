@@ -10,6 +10,11 @@ Welcome to the documentation!
 Documentation
 -------------
 
+.. toctree::
+   :maxdepth: 1
+   :caption: User Documentation
+
+   user/cli_user
 
 .. toctree::
    :maxdepth: 2

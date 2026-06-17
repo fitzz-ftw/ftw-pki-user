@@ -1,0 +1,6 @@
+[identity.dn]
+countryName = "DE"
+organizationName = "Muster-Verband e.V."
+commonName = "Max Mustermann"
+localityName = "Hamburg"
+organizationalUnitName = "Mitgliederverwaltung"
